@@ -1,5 +1,9 @@
 from django.shortcuts import render
 
+from rest_framework import permissions
+
+from .permissions import IsOwnerOrReadOnly
+
 # Create your views here.
 
 
@@ -10,11 +14,16 @@ from django.contrib.auth.models import User
 
 
 class SnippetList(generics.ListCreateAPIView):
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
+
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
 
 
 class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
 
